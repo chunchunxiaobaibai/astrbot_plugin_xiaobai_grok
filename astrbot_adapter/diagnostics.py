@@ -274,12 +274,15 @@ class TransportDiagnostics:
 
 
 _NETWORK_PROXY_HINT = (
-    "无法连接 xAI 授权服务（auth.x.ai）。国内网络请在插件配置填写 proxy，"
-    "例如 http://127.0.0.1:7890，保存并重载后再试。"
+    "无法连接 xAI 授权服务（auth.x.ai）。请在插件配置填写 Clash 混合端口，"
+    "必须用 http:// 而不是 https://，例如 http://127.0.0.1:7897，保存并重载后再试。"
 )
 _OAUTH_REASON_MESSAGES = {
     "dns": "无法解析 xAI 授权域名，请检查 DNS 或代理。",
-    "tls": "与 xAI 授权服务的 TLS 连接失败，请检查代理或系统证书。",
+    "tls": (
+        "与 xAI 授权服务的 TLS 连接失败。本地 Clash 代理请填写 http://127.0.0.1:端口，"
+        "不要写 https://。Clash Verge 混合端口常见为 7897。"
+    ),
     "proxy": "出站代理不可用，请检查插件配置中的 proxy 地址是否可访问。",
     "connect_timeout": _NETWORK_PROXY_HINT,
     "connect": _NETWORK_PROXY_HINT,
