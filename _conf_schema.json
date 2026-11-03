@@ -1,0 +1,51 @@
+{
+  "oauth_client_id": {
+    "type": "string",
+    "description": "OAuth 客户端 ID",
+    "hint": "默认使用公开 Grok CLI 客户端。可从插件的“授权与设置”页面直接开始登录。",
+    "default": "b1a00492-073a-47ea-816f-4c329264a828"
+  },
+  "oauth_client_profile": {
+    "type": "string",
+    "description": "OAuth 客户端配置名称",
+    "default": "public-grok-cli-reference"
+  },
+  "proxy": {
+    "type": "string",
+    "description": "本插件 OAuth 和推理出站代理",
+    "hint": "留空表示直接连接。",
+    "default": ""
+  },
+  "transport_diagnostics": {
+    "type": "bool",
+    "description": "记录 OAuth 与推理传输诊断日志",
+    "default": false
+  },
+  "transport_debug_file": {
+    "type": "bool",
+    "description": "保存独立脱敏传输调试文件",
+    "default": false
+  },
+  "reasoning_effort": {
+    "type": "string",
+    "description": "默认推理强度",
+    "hint": "留空使用模型默认值。",
+    "default": ""
+  },
+  "usage_tools_enabled": {
+    "type": "bool",
+    "description": "允许 Grok 模型按需查询额度",
+    "default": true
+  },
+  "usage_group_allowlist": {
+    "type": "list",
+    "description": "允许额度查询的群会话",
+    "hint": "填完整 unified_msg_origin；空列表拒绝所有群聊。",
+    "default": []
+  },
+  "transport_connect_timeout": {
+    "type": "int",
+    "description": "推理连接超时秒数",
+    "default": 10
+  }
+}

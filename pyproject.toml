@@ -1,0 +1,19 @@
+[project]
+name = "astrbot-plugin-grok-oauth"
+version = "0.8.5"
+description = "Independent Grok OAuth provider for AstrBot"
+requires-python = ">=3.12"
+license = "MIT"
+dependencies = ["httpx>=0.28.1,<0.29", "Pillow>=12.2,<13", "filelock>=3.29,<5"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests/unit", "tests/integration"]
+markers = ["live: explicit real-account verification", "media: explicit billable media verification"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP", "ASYNC"]

@@ -1,0 +1,8 @@
+# Observed production baseline; no packages installed by this plugin yet.
+httpx==0.28.1
+Pillow==12.2.0
+filelock==3.29.1
+openai==2.41.0
+pytest==9.0.3
+pytest-asyncio==1.4.0
+ruff==0.15.16

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Xiaobai Grok · 授权与设置</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="/api/plugin/page/bridge-sdk.js"></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="wordmark" aria-hidden="true">G</div>
+      <div><p class="eyebrow">Xiaobai Grok</p><h1>授权与设置</h1></div>
+    </header>
+    <p class="intro">在这里连接 Grok 账号。授权完成后，即可在 AstrBot 的模型页面添加提供商和模型。</p>
+    <div id="notice" class="notice" role="alert" hidden></div>
+    <section class="account-card" aria-labelledby="account-heading">
+      <div class="account-top">
+        <div><h2 id="account-heading">账号连接</h2><p id="status-description">正在检查授权状态…</p></div>
+        <span class="status" id="status-label" role="status" aria-live="polite">检查中</span>
+      </div>
+      <div class="actions">
+        <button id="start" class="primary" disabled>连接 Grok 账号</button>
+        <button id="refresh" class="secondary" disabled>检查状态</button>
+        <button id="disconnect" class="text-button" hidden>解除绑定</button>
+      </div>
+      <div id="disconnect-confirm" class="confirmation" hidden>
+        <p>解除后，此插件的 Grok 模型将需要重新授权。确定解除绑定？</p>
+        <button id="confirm-disconnect" class="danger">解除绑定</button>
+        <button id="keep-connected" class="secondary">保留连接</button>
+      </div>
+    </section>
+    <section id="device-panel" class="device-card" aria-labelledby="device-heading" hidden>
+      <div class="section-title"><h2 id="device-heading">完成官方设备授权</h2><span id="countdown"></span></div>
+      <ol class="steps">
+        <li><span>1</span><div><h3>复制认证码</h3><p>在官方页面输入下方认证码。</p></div></li>
+      </ol>
+      <div class="code-row"><input id="device-code" readonly aria-label="设备认证码" spellcheck="false"><button id="copy-code" class="secondary">复制认证码</button></div>
+      <ol class="steps" start="2">
+        <li><span>2</span><div><h3>前往 xAI 官方页面登录</h3><p>请核对地址为 auth.x.ai 或 accounts.x.ai。</p></div></li>
+      </ol>
+      <div class="actions"><button id="open-official" class="primary">打开官方授权页 ↗</button><button id="copy-url" class="secondary">复制官方链接</button></div>
+      <input id="official-url" readonly aria-label="官方授权页面地址" spellcheck="false">
+      <p id="open-help" class="hint" hidden>当前页面无法打开新标签页。请复制上方官方链接，在浏览器中打开。</p>
+      <ol class="steps" start="3">
+        <li><span>3</span><div><h3>等待授权完成</h3><p>此页面会自动检查结果，也可以手动检查。</p></div></li>
+      </ol>
+      <div class="actions"><button id="check-complete" class="secondary">我已认证</button><button id="cancel" class="text-button">取消本次授权</button></div>
+    </section>
+    <section id="connected-panel" class="success-card" hidden>
+      <h2>账号已连接</h2><p>在模型页面选择 <strong>Xiaobai Grok</strong> 创建提供商，再添加所需的 Grok 对话模型。</p>
+    </section>
+    <section id="usage-panel" class="usage-card" aria-labelledby="usage-heading">
+      <div class="section-title">
+        <div><h2 id="usage-heading">额度</h2><p id="usage-description">连接账号后可以手动查询额度。</p></div>
+        <span class="status" id="usage-status" role="status" aria-live="polite">等待连接</span>
+      </div>
+      <div id="usage-stale" class="usage-warning" role="status" hidden>这是历史快照，当前额度无法确认。请稍后重新查询。</div>
+      <dl class="usage-grid">
+        <div class="usage-primary"><dt id="usage-primary-label">剩余额度</dt><dd id="usage-primary">未知</dd></div>
+        <div><dt>已用额度</dt><dd id="usage-used">未知</dd></div>
+        <div><dt>额度范围</dt><dd id="usage-scope">未确认</dd></div>
+        <div><dt>额度周期</dt><dd id="usage-period">未知</dd></div>
+        <div><dt>重置时间</dt><dd id="usage-reset">未知</dd></div>
+        <div><dt>快照时间</dt><dd id="usage-observed">未知</dd></div>
+      </dl>
+      <p id="usage-cache" class="usage-meta" hidden></p>
+      <div class="actions usage-actions">
+        <button id="usage-query" class="secondary" disabled>查询额度</button>
+        <button id="usage-refresh" class="secondary" disabled>强制刷新</button>
+      </div>
+    </section>
+    <section class="help-card">
+      <h2>使用说明</h2>
+      <p>授权可以直接在此页面完成，无需预先创建提供商或模型。网络需要代理时，在插件配置中设置代理地址，保存后再开始授权。</p>
+      <details><summary>授权方式</summary><p>登录在 xAI 官方设备授权页面完成。此插件只使用订阅 OAuth 做对话和额度查询，不提供图片生成或视频。</p><p>客户端标识：<code id="client-id">正在加载</code></p></details>
+    </section>
+    <p class="footer" id="updated-at" aria-live="polite"></p>
+  </main>
+</body>
+</html>
