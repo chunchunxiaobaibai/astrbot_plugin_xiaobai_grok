@@ -226,6 +226,12 @@
     }
   }
 
+  function actionError(error) {
+    const raw = typeof error?.message === "string" ? error.message.trim() : "";
+    if (/无法连接|代理|proxy|auth\.x\.ai|认证码|授权已/i.test(raw)) return raw;
+    return "无法连接 xAI 授权服务（auth.x.ai）。国内网络请在插件配置填写 proxy，例如 http://127.0.0.1:7890，保存并重载后再试。";
+  }
+
   async function action(endpoint, body) {
     if (busy) return;
     busy = true;
@@ -239,8 +245,8 @@
       $("disconnect-confirm").hidden = true;
       $("open-help").hidden = true;
       render();
-    } catch {
-      notice("操作未完成，请检查网络连接后重试。", true);
+    } catch (error) {
+      notice(actionError(error), true);
     } finally {
       busy = false;
       render();

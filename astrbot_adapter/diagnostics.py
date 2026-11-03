@@ -273,6 +273,59 @@ class TransportDiagnostics:
             await asyncio.shield(self._close_task)
 
 
+_NETWORK_PROXY_HINT = (
+    "无法连接 xAI 授权服务（auth.x.ai）。国内网络请在插件配置填写 proxy，"
+    "例如 http://127.0.0.1:7890，保存并重载后再试。"
+)
+_OAUTH_REASON_MESSAGES = {
+    "dns": "无法解析 xAI 授权域名，请检查 DNS 或代理。",
+    "tls": "与 xAI 授权服务的 TLS 连接失败，请检查代理或系统证书。",
+    "proxy": "出站代理不可用，请检查插件配置中的 proxy 地址是否可访问。",
+    "connect_timeout": _NETWORK_PROXY_HINT,
+    "connect": _NETWORK_PROXY_HINT,
+    "network": _NETWORK_PROXY_HINT,
+    "read_timeout": "读取 xAI 授权响应超时，请稍后重试或检查代理。",
+    "write_timeout": "向 xAI 授权服务发送请求超时，请稍后重试或检查代理。",
+    "pool_timeout": "代理连接池繁忙，请稍后重试。",
+}
+
+
+def user_facing_oauth_error(error):
+    """Stable, credential-free text for plugin page and command replies."""
+    from ..grok_oauth.errors import (
+        AuthorizationDenied,
+        ClientNotEligible,
+        DeviceCodeExpired,
+        InvalidRequest,
+        PermissionDenied,
+        ProtocolError,
+        RateLimited,
+        ReauthorizationRequired,
+        ServiceClosed,
+    )
+
+    if isinstance(error, ProtocolError):
+        reason = (getattr(error, "oauth_diagnostic", None) or {}).get("oauth_reason")
+        return _OAUTH_REASON_MESSAGES.get(reason, _NETWORK_PROXY_HINT)
+    if isinstance(error, DeviceCodeExpired):
+        return "认证码已过期，请重新开始授权。"
+    if isinstance(error, AuthorizationDenied):
+        return "官方服务未批准本次授权，可以重新尝试。"
+    if isinstance(error, ReauthorizationRequired):
+        return "账号授权已失效，请重新连接。"
+    if isinstance(error, ClientNotEligible):
+        return "当前 OAuth 客户端未被批准，请核对客户端 ID。"
+    if isinstance(error, RateLimited):
+        return "请求过于频繁，请稍后再试。"
+    if isinstance(error, PermissionDenied):
+        return "当前账号无权完成此操作。"
+    if isinstance(error, ServiceClosed):
+        return "插件正在关闭，请稍后重试。"
+    if isinstance(error, InvalidRequest):
+        return str(error) if str(error) and str(error) != "InvalidRequest" else "请求参数无效。"
+    return _NETWORK_PROXY_HINT
+
+
 def format_oauth_diagnostic(value):
     """Short safe details for private administrator command replies."""
     detail = safe_oauth_diagnostic(value)
