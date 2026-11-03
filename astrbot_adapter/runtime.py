@@ -5,7 +5,6 @@ import copy
 import uuid
 import weakref
 from pathlib import Path
-from urllib.parse import urlsplit, urlunsplit
 
 import httpx
 
@@ -34,30 +33,6 @@ from .diagnostics import TransportDiagnostics
 
 DEFAULT_CLIENT_ID = "b1a00492-073a-47ea-816f-4c329264a828"
 DEFAULT_SCOPE = "openid profile email offline_access grok-cli:access api:access"
-_LOOPBACK_HOSTS = {"127.0.0.1", "localhost", "::1", "0.0.0.0"}
-
-
-def normalize_outbound_proxy(value):
-    """Accept host:port and rewrite loopback https:// to http:// for Clash mixed-port."""
-    if value is None:
-        return None
-    if not isinstance(value, str):
-        raise ValueError("proxy must be a string")
-    text = value.strip()
-    if not text:
-        return None
-    if "://" not in text:
-        text = "http://" + text
-    parsed = urlsplit(text)
-    scheme = parsed.scheme.lower()
-    if scheme not in {"http", "https", "socks5", "socks5h"}:
-        raise ValueError("proxy must be an http, https, or socks5 URL")
-    host = (parsed.hostname or "").lower()
-    if not host:
-        raise ValueError("proxy host is required")
-    if scheme == "https" and host in _LOOPBACK_HOSTS:
-        scheme = "http"
-    return urlunsplit(parsed._replace(scheme=scheme))
 
 
 async def _finish_owned_operation(operation):
@@ -114,9 +89,8 @@ class GrokRuntime:
         self.images = None
         self.video_assets = None
         self.videos = None
-        proxy = normalize_outbound_proxy(self.config.get("proxy"))
+        proxy = self.config.get("proxy") or None
         connect_timeout = validate_connect_timeout(self.config.get("transport_connect_timeout", 10))
-        self.outbound_proxy = proxy
         self.client = httpx.AsyncClient(
             transport=transport,
             proxy=proxy,
@@ -178,8 +152,8 @@ class GrokRuntime:
             VideoStore,
             self.data_root / "videos",
             media_hosts=self.config.get("media_hosts", []),
-            result_proxy=self.outbound_proxy,
-            source_proxy=self.outbound_proxy,
+            result_proxy=self.config.get("proxy") or None,
+            source_proxy=self.config.get("proxy") or None,
             source_media_hosts=self.config.get("video_source_hosts", []),
         )
 

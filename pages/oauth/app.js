@@ -229,7 +229,7 @@
   function actionError(error) {
     const raw = typeof error?.message === "string" ? error.message.trim() : "";
     if (/无法连接|代理|proxy|auth\.x\.ai|认证码|授权已/i.test(raw)) return raw;
-    return "无法连接 xAI 授权服务（auth.x.ai）。请填写 Clash 混合端口，必须用 http:// 而不是 https://，例如 http://127.0.0.1:7897，保存并重载后再试。";
+    return "无法连接 xAI 授权服务（auth.x.ai）。国内网络请在插件配置填写 proxy，例如 http://127.0.0.1:7890，保存并重载后再试。";
   }
 
   async function action(endpoint, body) {
