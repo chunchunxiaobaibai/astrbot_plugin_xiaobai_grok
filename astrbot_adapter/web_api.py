@@ -10,7 +10,6 @@ from ..grok_oauth.errors import (
 )
 from ..grok_oauth.oauth import safe_oauth_diagnostic
 from .compat import json_response, request
-from .diagnostics import user_facing_oauth_error
 from .provider import GrokOAuthProvider
 
 
@@ -135,11 +134,7 @@ class GrokWebAPI:
                 if isinstance(error, InvalidRequest)
                 else 502
             )
-            payload = {
-                "status": "error",
-                "message": user_facing_oauth_error(error),
-                **error.summary(),
-            }
+            payload = {"status": "error", **error.summary()}
             detail = safe_oauth_diagnostic(getattr(error, "oauth_diagnostic", None))
             if detail:
                 payload["diagnostic"] = detail
@@ -147,11 +142,4 @@ class GrokWebAPI:
         except Exception as error:
             if self.logger:
                 self.logger.error("Grok management failure: %s", type(error).__name__)
-            return json_response(
-                {
-                    "status": "error",
-                    "error": "InternalError",
-                    "message": "授权服务暂时不可用，请刷新页面后重试。",
-                },
-                status_code=500,
-            )
+            return json_response({"status": "error", "error": "InternalError"}, status_code=500)

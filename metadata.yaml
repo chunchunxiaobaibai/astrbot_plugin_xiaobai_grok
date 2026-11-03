@@ -1,7 +1,7 @@
 name: astrbot_plugin_xiaobai_grok
 display_name: Xiaobai Grok
 desc: 使用 Grok OAuth 登录，在管理页查询订阅额度，并把 Grok 对话模型接入 AstrBot。不含图片生成、视频和搜索工具。
-version: v1.0.2
+version: v1.0.1
 author: xiaobai
 repo: https://github.com/chunchunxiaobaibai/astrbot_plugin_xiaobai_grok
 astrbot_version: ">=4.28.2,<5.0"

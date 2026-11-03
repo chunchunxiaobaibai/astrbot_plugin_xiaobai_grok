@@ -13,7 +13,7 @@
   "proxy": {
     "type": "string",
     "description": "本插件 OAuth 和推理出站代理",
-    "hint": "留空表示直接连接，不继承系统代理。国内访问 xAI 需填写完整 URL，例如 http://127.0.0.1:7890。",
+    "hint": "留空表示直接连接。",
     "default": ""
   },
   "transport_diagnostics": {
