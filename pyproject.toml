@@ -4,7 +4,7 @@ version = "0.8.5"
 description = "Independent Grok OAuth provider for AstrBot"
 requires-python = ">=3.12"
 license = "MIT"
-dependencies = ["httpx>=0.28.1,<0.29", "Pillow>=12.2,<13", "filelock>=3.29,<5"]
+dependencies = ["httpx>=0.28.1,<0.29", "Pillow>=12.2,<14", "filelock>=3.29,<5"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
